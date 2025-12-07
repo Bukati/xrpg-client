@@ -368,12 +368,15 @@ function ChapterComponent({
                   </div>
                   <div className="flex flex-wrap gap-2">
                     {winningOption.voters.map((voter, idx) => (
-                      <span
+                      <a
                         key={idx}
-                        className="text-xs px-2 py-1 bg-[var(--background-secondary)] border border-[var(--shield-border)] rounded"
+                        href={`https://x.com/${voter}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs px-2 py-1 bg-[var(--background-secondary)] border border-[var(--shield-border)] rounded hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
                       >
                         @{voter}
-                      </span>
+                      </a>
                     ))}
                   </div>
                 </div>
