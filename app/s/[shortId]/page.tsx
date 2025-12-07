@@ -573,35 +573,12 @@ export default function QuestStoryPage({
               </div>
             </div>
 
-            {/* Active Chapter */}
-            {quest.status === 'ACTIVE' && quest.chapters.length > 0 && (
-              <div className="mb-8">
-                {quest.chapters
-                  .filter((ch) => ch.chapterNumber === quest.currentChapter)
-                  .map((chapter) => (
-                    <ChapterComponent
-                      key={chapter.id}
-                      chapter={chapter}
-                      quest={quest}
-                      isLatest={true}
-                      isFinal={chapter.chapterNumber === 5}
-                      session={session}
-                    />
-                  ))}
-              </div>
-            )}
-
-            {/* Chapters - ordered by chapter number (oldest first) */}
+            {/* All Chapters - chronological order (1, 2, 3, 4, 5) */}
             <div className="space-y-8">
               {quest.chapters
-                .filter((ch) =>
-                  quest.status === 'COMPLETED'
-                    ? true
-                    : ch.chapterNumber !== quest.currentChapter
-                )
                 .sort((a, b) => a.chapterNumber - b.chapterNumber)
                 .map((chapter) => {
-                  const isLatest = quest.status === 'COMPLETED' && chapter.chapterNumber === quest.currentChapter;
+                  const isLatest = chapter.chapterNumber === quest.currentChapter;
                   const isFinal = chapter.chapterNumber === 5;
 
                   return (
