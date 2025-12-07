@@ -1,36 +1,107 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
-
-## Getting Started
-
-First, run the development server:
-
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+```
+                    ██████╗ ██████╗  ██████╗
+                    ██╔══██╗██╔══██╗██╔════╝
+█████╗█████╗█████╗  ██████╔╝██████╔╝██║  ███╗
+╚════╝╚════╝╚════╝  ██╔══██╗██╔═══╝ ██║   ██║
+                    ██║  ██║██║     ╚██████╔╝
+                    ╚═╝  ╚═╝╚═╝      ╚═════╝
+        ⚔️  Critical thinking as a blood sport  ⚔️
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<div align="center">
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+[![Website](https://img.shields.io/badge/Website-xrpg.gg-8B5CF6?style=for-the-badge)](https://xrpg.gg)
+[![X](https://img.shields.io/badge/Bot-@xRPGBot-000000?style=for-the-badge&logo=x)](https://x.com/xRPGBot)
+[![Creator](https://img.shields.io/badge/Creator-@bukati-1DA1F2?style=for-the-badge&logo=x)](https://x.com/bukati)
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+**Web client for xRPG - The Grok-powered "what-if" simulation game on X**
 
-## Learn More
+[Website](https://xrpg.gg) · [Play on X](https://x.com/xRPGBot) · [Backend Repo](https://github.com/user/xrpg-server)
 
-To learn more about Next.js, take a look at the following resources:
+</div>
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## ⚡ What is xRPG?
 
-## Deploy on Vercel
+xRPG turns any spicy tweet into a branching "what-if" simulation powered by Grok AI and real historical context. Pick an ideology, watch history show you the receipts.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+**The game doesn't lecture. It shows consequences.**
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 🏗️ Tech Stack
+
+- **Framework:** Next.js 15 (App Router)
+- **Styling:** Tailwind CSS
+- **Auth:** X OAuth 2.0 (via backend)
+- **Deployment:** Vercel
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Node.js 18+
+- Running backend server ([xrpg-server](https://github.com/user/xrpg-server))
+
+### Installation
+
+```bash
+# Clone the repo
+git clone https://github.com/user/xrpg-client.git
+cd xrpg-client
+
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.example .env.local
+# Edit .env.local with your settings
+
+# Start development server
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000) to see the app.
+
+### Environment Variables
+
+```env
+NEXT_PUBLIC_API_URL="http://localhost:3001"
+```
+
+## 📁 Project Structure
+
+```
+app/
+├── page.tsx           # Homepage with active/finished games
+├── about/             # How it works page
+├── login/             # X OAuth login
+├── s/[shortId]/       # Quest story viewer
+│   ├── page.tsx       # Chapter display & voting
+│   └── QuestSidebar.tsx
+components/
+├── ActiveGames.tsx    # Live games list
+├── FinishedGames.tsx  # Completed games list
+└── Header.tsx         # Navigation & user info
+```
+
+## ✨ Features
+
+- **📖 Story Viewer** - Read branching narratives with historical context
+- **🗳️ Live Voting** - Vote on choices directly from the web (posts to X)
+- **⏱️ Real-time Countdown** - See voting deadlines tick down
+- **📚 Source Links** - Every chapter backed by real historical sources
+- **🔐 X Auth** - Login with your X account to vote
+
+## 📜 License
+
+MIT License - see [LICENSE](LICENSE) for details.
+
+---
+
+<div align="center">
+
+**Built with ⚔️ by [@bukati](https://x.com/bukati)**
+
+*History doesn't repeat — it rhymes, and Grok is the DJ.*
+
+</div>
