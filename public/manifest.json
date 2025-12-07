@@ -1,0 +1,18 @@
+{
+  "name": "xRPG - Grok-Powered Ideological Battle Royale",
+  "short_name": "xRPG",
+  "description": "Turn any spicy tweet into a live, branching civilization simulation on X",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0a0f14",
+  "theme_color": "#00d4ff",
+  "icons": [
+    {
+      "src": "/favicon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ]
+}
+

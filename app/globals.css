@@ -1,0 +1,74 @@
+@import "tailwindcss";
+
+:root {
+  /* xRPG Brand Colors - derived from favicon */
+  --primary: #00d4ff;
+  --primary-glow: #00d4ff80;
+  --accent: #ff3366;
+  --accent-glow: #ff336680;
+  
+  /* Dark theme base */
+  --background: #0a0f14;
+  --background-secondary: #111920;
+  --background-tertiary: #1a242d;
+  --foreground: #e8eef4;
+  --foreground-muted: #8b9caa;
+  
+  /* Shield colors from favicon */
+  --shield-dark: #3a4a5a;
+  --shield-light: #5a6a7a;
+  --shield-border: #7a8a9a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-accent: var(--accent);
+  --font-pixel: var(--font-pixel);
+  --font-mono: var(--font-mono);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-mono), ui-monospace, monospace;
+}
+
+/* Pixel-perfect rendering for retro elements */
+.pixel-font {
+  font-family: var(--font-pixel), monospace;
+  image-rendering: pixelated;
+}
+
+/* Glow effects */
+.glow-primary {
+  box-shadow: 0 0 20px var(--primary-glow), 0 0 40px var(--primary-glow);
+}
+
+.glow-accent {
+  box-shadow: 0 0 20px var(--accent-glow), 0 0 40px var(--accent-glow);
+}
+
+.text-glow-primary {
+  text-shadow: 0 0 10px var(--primary-glow), 0 0 20px var(--primary-glow);
+}
+
+.text-glow-accent {
+  text-shadow: 0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow);
+}
+
+/* Scanline effect for retro feel */
+.scanlines::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0, 0, 0, 0.1) 2px,
+    rgba(0, 0, 0, 0.1) 4px
+  );
+  pointer-events: none;
+}
