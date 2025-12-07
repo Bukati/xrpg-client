@@ -479,7 +479,7 @@ export default function QuestStoryPage({
         <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-6">
           {/* Left Sidebar - Games */}
           <div className="hidden lg:block">
-            <div className="sticky top-4 max-h-[calc(100vh-2rem)] overflow-y-auto pr-2">
+            <div className="sticky top-20">
               <QuestSidebar />
             </div>
           </div>
@@ -532,9 +532,9 @@ export default function QuestStoryPage({
               </div>
             </div>
 
-            {/* Active Chapter - Fixed */}
+            {/* Active Chapter */}
             {quest.status === 'ACTIVE' && quest.chapters.length > 0 && (
-              <div className="sticky top-4 z-20 mb-8">
+              <div className="mb-8">
                 {quest.chapters
                   .filter((ch) => ch.chapterNumber === quest.currentChapter)
                   .map((chapter) => (
