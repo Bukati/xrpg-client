@@ -553,7 +553,7 @@ export default function QuestStoryPage({
               </div>
             )}
 
-            {/* Past Chapters - Scrollable */}
+            {/* Chapters - ordered by chapter number (oldest first) */}
             <div className="space-y-8">
               {quest.chapters
                 .filter((ch) =>
@@ -561,6 +561,7 @@ export default function QuestStoryPage({
                     ? true
                     : ch.chapterNumber !== quest.currentChapter
                 )
+                .sort((a, b) => a.chapterNumber - b.chapterNumber)
                 .map((chapter) => {
                   const isLatest = quest.status === 'COMPLETED' && chapter.chapterNumber === quest.currentChapter;
                   const isFinal = chapter.chapterNumber === 5;
