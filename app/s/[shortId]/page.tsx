@@ -8,6 +8,7 @@ import QuestSidebar from "./QuestSidebar";
 interface QuestOption {
   text: string;
   label: string;
+  description?: string;
 }
 
 interface HistoricalSource {
@@ -168,32 +169,45 @@ function ChapterComponent({
   const [selectedOption, setSelectedOption] = useState<number | null>(getUserVote());
   const hasVoted = selectedOption !== null;
 
-  // Get winning option for past chapters
-  const getWinningOption = (): { option: number; count: number; voters: string[] } | null => {
-    if (!chapter.votes || chapter.votes.length === 0) return null;
-
+  // Get vote data for past chapters
+  const getVoteData = (): {
+    winner: number;
+    options: { [key: number]: { count: number; voters: string[] } }
+  } | null => {
     const voteCounts: { [key: number]: { count: number; voters: string[] } } = {};
-    chapter.votes.forEach(vote => {
-      if (!voteCounts[vote.selectedOption]) {
-        voteCounts[vote.selectedOption] = { count: 0, voters: [] };
-      }
-      voteCounts[vote.selectedOption].count++;
-      voteCounts[vote.selectedOption].voters.push(vote.user.xHandle);
-    });
 
+    // Initialize all options with 0 votes
+    if (chapter.options) {
+      chapter.options.forEach((_, idx) => {
+        voteCounts[idx + 1] = { count: 0, voters: [] };
+      });
+    }
+
+    // Count votes
+    if (chapter.votes) {
+      chapter.votes.forEach(vote => {
+        if (!voteCounts[vote.selectedOption]) {
+          voteCounts[vote.selectedOption] = { count: 0, voters: [] };
+        }
+        voteCounts[vote.selectedOption].count++;
+        voteCounts[vote.selectedOption].voters.push(vote.user.xHandle);
+      });
+    }
+
+    // Find winner
     let maxVotes = 0;
-    let winningOpt: { option: number; count: number; voters: string[] } | null = null;
+    let winner = 1;
     Object.entries(voteCounts).forEach(([opt, data]) => {
       if (data.count > maxVotes) {
         maxVotes = data.count;
-        winningOpt = { option: parseInt(opt), ...data };
+        winner = parseInt(opt);
       }
     });
 
-    return winningOpt;
+    return { winner, options: voteCounts };
   };
 
-  const winningOption = !isLatest ? getWinningOption() : null;
+  const voteData = !isLatest ? getVoteData() : null;
 
   const handleVote = async (optionIndex: number) => {
     if (!session || voting || hasVoted) return;
@@ -342,44 +356,68 @@ function ChapterComponent({
             </div>
           )}
 
-          {/* Past chapter - show winning option */}
-          {chapter.options && chapter.options.length > 0 && !isFinal && !isLatest && winningOption && (
+          {/* Past chapter - show all options with winner highlighted */}
+          {chapter.options && chapter.options.length > 0 && !isFinal && !isLatest && voteData && (
             <div className="mt-6 pt-6 border-t-2 border-[var(--shield-border)]">
               <div className="text-sm font-bold text-[var(--primary)] mb-4 pixel-font">
-                🏆 COMMUNITY CHOSE:
+                RESULT:
               </div>
-              <div className="relative group">
-                <div className="p-6 border-2 border-[var(--primary)] bg-[var(--primary)]/10 rounded-lg">
-                  <div className="font-bold text-2xl text-[var(--primary)] mb-3 pixel-font">
-                    {chapter.options[winningOption.option - 1]?.label}
-                  </div>
-                  <div className="text-sm text-[var(--foreground)]">
-                    {chapter.options[winningOption.option - 1]?.text}
-                  </div>
-                  <div className="mt-3 text-xs text-[var(--accent)]">
-                    {winningOption.count} {winningOption.count === 1 ? 'vote' : 'votes'}
-                  </div>
-                </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {chapter.options.map((option, idx) => {
+                  const optionNum = idx + 1;
+                  const isWinner = voteData.winner === optionNum;
+                  const optionVotes = voteData.options[optionNum] || { count: 0, voters: [] };
 
-                {/* Hover tooltip with voters */}
-                <div className="absolute left-0 right-0 top-full mt-2 p-4 bg-[var(--background)] border-2 border-[var(--primary)] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
-                  <div className="text-xs font-bold text-[var(--primary)] mb-2">
-                    VOTERS ({winningOption.voters.length}):
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {winningOption.voters.map((voter, idx) => (
-                      <a
-                        key={idx}
-                        href={`https://x.com/${voter}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs px-2 py-1 bg-[var(--background-secondary)] border border-[var(--shield-border)] rounded hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
-                      >
-                        @{voter}
-                      </a>
-                    ))}
-                  </div>
-                </div>
+                  return (
+                    <div
+                      key={idx}
+                      className={`relative group p-6 border-2 rounded-lg ${
+                        isWinner
+                          ? "border-[var(--primary)] bg-[var(--primary)]/10"
+                          : "border-[var(--shield-border)] bg-[var(--background)] opacity-60"
+                      }`}
+                    >
+                      {isWinner && (
+                        <div className="absolute -top-2 -right-2 bg-[var(--primary)] text-[var(--background)] px-3 py-1 rounded-full text-xs font-bold">
+                          CHOSEN
+                        </div>
+                      )}
+                      <div className={`font-bold text-xl mb-2 pixel-font ${isWinner ? "text-[var(--primary)]" : "text-[var(--foreground-muted)]"}`}>
+                        {option.text}
+                      </div>
+                      {option.description && (
+                        <div className="text-sm text-[var(--foreground-muted)] mb-3">
+                          {option.description}
+                        </div>
+                      )}
+                      <div className="text-xs text-[var(--accent)]">
+                        {optionVotes.count} {optionVotes.count === 1 ? 'vote' : 'votes'}
+                      </div>
+
+                      {/* Hover tooltip with voters */}
+                      {optionVotes.voters.length > 0 && (
+                        <div className="absolute left-0 right-0 top-full mt-2 p-4 bg-[var(--background)] border-2 border-[var(--primary)] rounded-lg opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-10">
+                          <div className="text-xs font-bold text-[var(--primary)] mb-2">
+                            VOTERS ({optionVotes.voters.length}):
+                          </div>
+                          <div className="flex flex-wrap gap-2">
+                            {optionVotes.voters.map((voter, vIdx) => (
+                              <a
+                                key={vIdx}
+                                href={`https://x.com/${voter}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-xs px-2 py-1 bg-[var(--background-secondary)] border border-[var(--shield-border)] rounded hover:border-[var(--primary)] hover:text-[var(--primary)] transition-colors"
+                              >
+                                @{voter}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
