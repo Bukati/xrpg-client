@@ -532,23 +532,47 @@ export default function QuestStoryPage({
               </div>
             </div>
 
-            {/* Chapters */}
-            <div className="space-y-8">
-              {quest.chapters.map((chapter) => {
-                const isLatest = chapter.chapterNumber === quest.currentChapter;
-                const isFinal = chapter.chapterNumber === 5;
+            {/* Active Chapter - Fixed */}
+            {quest.status === 'ACTIVE' && quest.chapters.length > 0 && (
+              <div className="sticky top-4 z-20 mb-8">
+                {quest.chapters
+                  .filter((ch) => ch.chapterNumber === quest.currentChapter)
+                  .map((chapter) => (
+                    <ChapterComponent
+                      key={chapter.id}
+                      chapter={chapter}
+                      quest={quest}
+                      isLatest={true}
+                      isFinal={chapter.chapterNumber === 5}
+                      session={session}
+                    />
+                  ))}
+              </div>
+            )}
 
-                return (
-                  <ChapterComponent
-                    key={chapter.id}
-                    chapter={chapter}
-                    quest={quest}
-                    isLatest={isLatest}
-                    isFinal={isFinal}
-                    session={session}
-                  />
-                );
-              })}
+            {/* Past Chapters - Scrollable */}
+            <div className="space-y-8">
+              {quest.chapters
+                .filter((ch) =>
+                  quest.status === 'COMPLETED'
+                    ? true
+                    : ch.chapterNumber !== quest.currentChapter
+                )
+                .map((chapter) => {
+                  const isLatest = quest.status === 'COMPLETED' && chapter.chapterNumber === quest.currentChapter;
+                  const isFinal = chapter.chapterNumber === 5;
+
+                  return (
+                    <ChapterComponent
+                      key={chapter.id}
+                      chapter={chapter}
+                      quest={quest}
+                      isLatest={isLatest}
+                      isFinal={isFinal}
+                      session={session}
+                    />
+                  );
+                })}
             </div>
 
             {/* Footer */}
